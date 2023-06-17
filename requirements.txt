@@ -1,0 +1,8 @@
+pyngrok==6.0.0
+python-dotenv==1.0.0
+quart==0.18.4
+signalwire==2.0.4
+asyncio==3.4.3
+loguru==0.7.0
+pydub==0.25.1
+requests==2.31.0
