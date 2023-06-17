@@ -179,4 +179,3 @@ if __name__ == "__main__":
             logger.error(f"Error restarting ngrok after killing process: {e}")
             # If it fails again, you may want to handle this appropriately in your code
     app.run('localhost', port=app.config['PORT'], debug=False)
-
