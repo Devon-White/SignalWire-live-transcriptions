@@ -4,12 +4,12 @@ This script integrates SignalWire's telephony and Deepgram's transcription servi
 
 ## Table of Contents
 
-1. [Prerequisites](#prerequisites)
-2. [Setup](#setup)
-3. [Code Explanation](#code-explanation)
+- [Prerequisites](#prerequisites)
+- [Setup](#setup)
+- [Code Explanation](#code-explanation)
     - [ActiveCall Class](#activecall-class)
     - [Key Functions](#key-functions-explanation)
-4. [Running the Script](#running-the-script)
+- [Running the Script](#running-the-script)
 
 ## Prerequisites
 
