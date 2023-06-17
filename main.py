@@ -97,7 +97,6 @@ async def websocket_endpoint():
             ws = await websocket.receive()
             # Makes sure valid json is being sent
             data = json.loads(ws)
-            logger.error("Invalid JSON received.")
             event = data.get('event')
 
             if event == "start":
