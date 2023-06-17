@@ -50,13 +50,13 @@ class ActiveCall:
         # Establish a connection with Deepgram
         socket = await self.dg_client.transcription.live({
             'punctuate': True,
-            'encoding': "mulaw",    # Match encoding of phone calls
-            'sample_rate': 8000,    # Match audio sample rate
-            'channels': 2,          # Match Audio Channel amount
-            'model': 'phonecall',   # Improves accuracy of transcribing phone call audio
-            'language': 'en-US',    # Sets language of transcription to english
-            'tier': 'nova',         # Sets transcription tier to Nova - tiers: standard/enhanced/nova
-            'interim_results': False,   # Only gives transcription results on final speech (when silence is heard)
+            'encoding': "mulaw",  # Match encoding of phone calls
+            'sample_rate': 8000,  # Match audio sample rate
+            'channels': 2,  # Match Audio Channel amount
+            'model': 'phonecall',  # Improves accuracy of transcribing phone call audio
+            'language': 'en-US',  # Sets language of transcription to english
+            'tier': 'nova',  # Sets transcription tier to Nova - tiers: standard/enhanced/nova
+            'interim_results': False,  # Only gives transcription results on final speech (when silence is heard)
         })
         socket.registerHandler(socket.event.CLOSE, lambda _: logger.info("Connection Closed..."))
         socket.registerHandler(socket.event.TRANSCRIPT_RECEIVED, self.get_transcript)
@@ -137,15 +137,16 @@ async def websocket_endpoint():
                 in_buffer = in_buffer[buffer_size:]
                 out_buffer = out_buffer[buffer_size:]
 
-    except Exception as e:
-        logger.error(e)
+    except Exception as error:
+        logger.error(error)
     finally:
         await websocket.close(app.config['PORT'])
 
 
 def start_ngrok():
     """Start ngrok for tunneling"""
-    tunnel_url = ngrok.connect(app.config['PORT']).public_url
+    logger.info("Starting ngrok tunnel...")
+    tunnel_url = ngrok.connect(app.config['PORT'], bind_tls=True).public_url
     app.config['PUBLIC_URL'] = tunnel_url
 
     # Getting sid of webhook number
@@ -153,10 +154,29 @@ def start_ngrok():
     sid = incoming_phone_numbers[0].sid if incoming_phone_numbers else logger.error("Invalid Webhook number")
 
     # Update the voice URL
-    # noinspection PyTypeChecker
-    client.incoming_phone_numbers(sid).update(voice_url=f"{tunnel_url}/inbound", voice_receive_mode="voice")
+    try:
+        # noinspection PyTypeChecker
+        client.incoming_phone_numbers(sid).update(voice_url=f"{tunnel_url}/inbound", voice_receive_mode="voice")
+        logger.info(f"Signalwire Number updated...\n Public Url: {tunnel_url}")
+        logger.info(f"Call {app.config['WEBHOOK_NUMBER']} to start transcribing a call...")
+    except Exception as e:
+        logger.error(e)
 
 
 if __name__ == "__main__":
-    start_ngrok()
-    app.run('localhost', port=app.config['PORT'])
+    try:
+        start_ngrok()
+    except Exception as e:
+        logger.error(f"{e}")
+        logger.info("Killing ngrok process...")
+        # Checks the kind of platform, and then sets the according command to kill ngrok
+        command = "taskkill /IM ngrok.exe /F" if os.name == 'nt' else "pkill ngrok"
+        os.system(command)
+        # Try starting ngrok again after killing the process
+        try:
+            start_ngrok()
+        except Exception as e:
+            logger.error(f"Error restarting ngrok after killing process: {e}")
+            # If it fails again, you may want to handle this appropriately in your code
+    app.run('localhost', port=app.config['PORT'], debug=False)
+
