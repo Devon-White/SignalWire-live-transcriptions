@@ -240,3 +240,12 @@ python main.py
 On receiving an inbound call, the script will automatically forward the call, stream the audio, transcribe the conversation using Deepgram, and log the transcription results.
 
 Remember to always keep your SignalWire and Deepgram credentials secure and do not expose them in public repositories or shared code.
+
+
+## Coming Soon!
+
+Another repo will be opened soon to show-case a more complex demo of this application. See gif below for a short demo.
+
+Will link to repo once released!
+
+![Alt Text](/static/transcription.gif)
