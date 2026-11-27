@@ -242,10 +242,14 @@ On receiving an inbound call, the script will automatically forward the call, st
 Remember to always keep your SignalWire and Deepgram credentials secure and do not expose them in public repositories or shared code.
 
 
-## Coming Soon!
+## Full-Stack Version
 
-Another repo will be opened soon to show-case a more complex demo of this application. See gif below for a short demo.
+A full-stack version of this demo is available at [SignalWire-live-transcriptions-complex](https://github.com/Devon-White/SignalWire-live-transcriptions-complex). It builds on this script with a FastAPI backend and a browser dashboard:
 
-Will link to repo once released!
+- Active calls appear in a list, and selecting one streams its transcript to the page in real time over WebSockets.
+- Each line of the transcript is labeled by speaker and saved to SQLite, so a call's history loads when you open it.
+- Transcripts can be downloaded as CSV files.
 
-![Alt Text](/static/transcription.gif)
+The gif below shows the full-stack version in action.
+
+![Live transcription demo](/static/transcription.gif)
